@@ -1,0 +1,31 @@
+# Template — copy this to fly.toml and run `fly launch` once per region.
+# Change `app` and pick --region at launch time:
+#   fly launch --name barrel-na --region iad   (North America - Virginia)
+#   fly launch --name barrel-eu --region fra   (Europe - Frankfurt)
+#   fly launch --name barrel-in --region bom   (India - Mumbai)
+#
+# Each becomes its own independent server with its own URL
+# (e.g. barrel-na.fly.dev) — no shared matchmaker needed, the client
+# just picks one of the 3 URLs directly.
+
+app = "barrel-na" # change per region
+
+[build]
+
+[env]
+  PORT = "2567"
+
+[[services]]
+  internal_port = 2567
+  protocol = "tcp"
+  auto_stop_machines = false
+  auto_start_machines = true
+  min_machines_running = 1
+
+  [[services.ports]]
+    port = 80
+    handlers = ["http"]
+
+  [[services.ports]]
+    port = 443
+    handlers = ["tls", "http"]
